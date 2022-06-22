@@ -349,18 +349,31 @@ class Printer3d:
             wait = self.of.rand_wait
             # Full evaluation where needed
             values = np.zeros(len(data))
-            for solution in range(len(data)):
+            for idx_solution, solution in enumerate(data):
+
+                # VECTORIZE
+                time = np.cumsum(self.of.size_vec[solution] + wait)
+                time -= wait
+
+                penalty = (time + self.of.size_vec[solution]) - self.of.deadline_vec[solution]
+
+                score = penalty > 0
+                values[idx_solution] = np.sum(penalty[score] * self.of.rand_pen)
+
+                """
+                # FOR LOOP
                 time = 0
                 score = 0
-                for task in self.data[solution]:
+                for task in self.data[idx_solution]:
                     size = self.of.jobs[task][0]
                     deadline = self.of.jobs[task][1]
                     penalty = (time+size) - deadline
                     if penalty > 0:
                         score += self.of.rand_pen*penalty
                     time += size + wait
-                values[solution] = score
-
+                values[idx_solution] = score
+                """
+            # import ipdb; ipdb.set_trace()
             self.obj=values                   
 
             # stale = self.stale & (self.lastmove == N).all(-1)
@@ -400,13 +413,20 @@ class Printer3d:
             self.element = of.Move
             self.data = np.asarray(data)
 
-    def generate_values(self,N):
+    def generate_values(self, N):
         self.rand_wait = np.random.randint(5)
         rand_size = np.random.randint(1,20,N)
         rand_dl = rand_size + np.random.randint(1,N,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
         self.rand_pen = np.random.rand(1)
+
+        # generate vectorize data
+        self.size_vec = np.zeros(N, np.int64)
+        self.deadline_vec = np.zeros(N, np.int64)
+        for key, value in self.jobs.items():
+            self.size_vec[key] = value[0]
+            self.deadline_vec[key] = value[1]
 
     def __init__(self, N):
         if N < 4:
