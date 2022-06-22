@@ -137,9 +137,6 @@ class Printer3d:
 
     class SolutionSample(sample.Sample):
         def __init__(self, of, data, obj=None, stale=None, lastmove=None):
-            # self.rand_wait = rand_wait
-            # self.rand_pen = rand_pen
-            # self.jobs = jobs
             self.of = of
             self.element = of.Solution
             self.data = np.asarray(data)
@@ -353,11 +350,8 @@ class Printer3d:
                 time = 0
                 score = 0
                 for task in self.data[solution]:
-                    # try:
-                    size = self.jobs[task][0]
-                    # except:
-                    #    import ipdb; ipdb.set_trace()
-                    deadline = self.jobs[task][1]
+                    size = self.of.jobs[task][0]
+                    deadline = self.of.jobs[task][1]
                     penalty = (time+size) - deadline
                     if penalty > 0:
                         score += self.of.rand_pen*penalty
