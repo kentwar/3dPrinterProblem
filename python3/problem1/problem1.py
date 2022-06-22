@@ -228,8 +228,9 @@ class Printer3d:
         def randomMove(self, n=1):
             m = n * len(self.data)
             data = np.empty((m, 2), int)
-            data[:, 0] = np.random.randint(1, self.N, m)
-            data[:, 1] = (data[:, 0] + np.random.choice([-1,1], m)) 
+            data[:, 0] = np.random.randint(0, self.N - 1, m)
+            # data[:, 1] = (data[:, 0] + np.random.choice([-1,1], m))
+            data[:, 1] = data[:, 0] + 1
             return self.of.MoveSample(self.of, np.sort(data, -1))
 
         def randomNeighbour(self, n=1):
@@ -353,7 +354,10 @@ class Printer3d:
                 time = 0
                 score = 0
                 for task in self.data[solution]:
+                    # try:
                     size = self.jobs[task][0]
+                    # except:
+                    #    import ipdb; ipdb.set_trace()
                     deadline = self.jobs[task][1]
                     penalty = (time+size) - deadline
                     if penalty > 0:

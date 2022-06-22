@@ -32,8 +32,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Instantiate the problem to solve here
-from nqueens import NQueens
-p = NQueens(200)
+# from nqueens import NQueens
+from problem1 import Printer3d
+p = Printer3d(200)
 
 # EA parameters
 Nind = 200      # Population size
