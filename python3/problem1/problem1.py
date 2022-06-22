@@ -354,8 +354,7 @@ class Printer3d:
                 # VECTORIZE
                 time = np.cumsum(self.of.size_vec[solution] + wait)
                 time -= wait
-
-                penalty = (time + self.of.size_vec[solution]) - self.of.deadline_vec[solution]
+                penalty = time - self.of.deadline_vec[solution]
 
                 score = penalty > 0
                 values[idx_solution] = np.sum(penalty[score] * self.of.rand_pen)
@@ -373,8 +372,8 @@ class Printer3d:
                     time += size + wait
                 values[idx_solution] = score
                 """
-            # import ipdb; ipdb.set_trace()
-            self.obj=values                   
+                
+            self.obj=values
 
             # stale = self.stale & (self.lastmove == N).all(-1)
             # q = self.data[stale]
@@ -419,7 +418,7 @@ class Printer3d:
         rand_dl = rand_size + np.random.randint(1,20*N,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
-        self.rand_pen = np.random.rand(1)
+        self.rand_pen = np.random.randint(10, size=1)
 
         # generate vectorize data
         self.size_vec = np.zeros(N, np.int64)
