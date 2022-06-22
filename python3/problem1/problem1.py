@@ -4,10 +4,8 @@ import sample
 class Printer3d:
 
     class Solution(sample.Element):
-        def __init__(self, of, data, obj=None, stale=None, lastmove=None, jobs = None,rand_wait = None, rand_pen = None):
-            self.rand_wait = rand_wait
-            self.rand_pen = rand_pen
-            self.jobs = jobs
+        def __init__(self, of, data, obj=None, stale=None, lastmove=None):
+
             self.of = of
             self.sample = of.SolutionSample
             self.data = np.asarray(data)
@@ -132,15 +130,16 @@ class Printer3d:
             self.toSample().evaluate()
 
         def objvalue(self):
+            print('test')
             if self.stale:
                 self.evaluate()
             return self.obj.copy()
 
     class SolutionSample(sample.Sample):
-        def __init__(self, of, data, obj=None, stale=None, lastmove=None, jobs = None, rand_wait = None, rand_pen = None):
-            self.rand_wait = rand_wait
-            self.rand_pen = rand_pen
-            self.jobs = jobs
+        def __init__(self, of, data, obj=None, stale=None, lastmove=None):
+            # self.rand_wait = rand_wait
+            # self.rand_pen = rand_pen
+            # self.jobs = jobs
             self.of = of
             self.element = of.Solution
             self.data = np.asarray(data)
@@ -347,7 +346,7 @@ class Printer3d:
         def evaluate(self):
             N = self.N
             data = self.data
-            wait = self.rand_wait
+            wait = self.of.rand_wait
             # Full evaluation where needed
             values = np.zeros(len(data))
             for solution in range(len(data)):
@@ -361,32 +360,31 @@ class Printer3d:
                     deadline = self.jobs[task][1]
                     penalty = (time+size) - deadline
                     if penalty > 0:
-                        score += self.rand_pen*penalty
+                        score += self.of.rand_pen*penalty
                     time += size + wait
                 values[solution] = score
-            return(values)
 
-                    
+            self.obj=values                   
 
-            stale = self.stale & (self.lastmove == N).all(-1)
-            q = self.data[stale]
-            self.obj[stale, 0] = ((np.abs(q[:, np.newaxis, :] - q[:, :, np.newaxis]) == r).sum(-1).sum(-1) - N) / 2
-            # Incremental evaluation where possible
-            stale = self.stale & (self.lastmove[:, 0] != self.lastmove[:, 1])
-            idx = np.where(stale)[0][:, np.newaxis]
-            ix = self.lastmove[stale]
-            r = r[ix]
-            # add new conflicts
-            d = np.abs(data[idx, ix][:, :, np.newaxis] - data[idx])
-            self.obj[stale, 0] += (d == r).sum(-1).sum(-1)
-            # subtract old conflicts
-            i0 = np.arange(len(ix))[:, np.newaxis, np.newaxis]
-            i1 = np.arange(2)[:, np.newaxis]
-            i2 = ix[:, np.newaxis, :]
-            d[i0, i1, i2] = d[i0, i1, i2[:, :, ::-1]]
-            self.obj[stale, 0] -= (d[:, ::-1] == r).sum(-1).sum(-1)
-            # Clear stale everywhere
-            self.stale[self.stale] = False
+            # stale = self.stale & (self.lastmove == N).all(-1)
+            # q = self.data[stale]
+            # self.obj[stale, 0] = ((np.abs(q[:, np.newaxis, :] - q[:, :, np.newaxis]) == r).sum(-1).sum(-1) - N) / 2
+            # # Incremental evaluation where possible
+            # stale = self.stale & (self.lastmove[:, 0] != self.lastmove[:, 1])
+            # idx = np.where(stale)[0][:, np.newaxis]
+            # ix = self.lastmove[stale]
+            # r = r[ix]
+            # # add new conflicts
+            # d = np.abs(data[idx, ix][:, :, np.newaxis] - data[idx])
+            # self.obj[stale, 0] += (d == r).sum(-1).sum(-1)
+            # # subtract old conflicts
+            # i0 = np.arange(len(ix))[:, np.newaxis, np.newaxis]
+            # i1 = np.arange(2)[:, np.newaxis]
+            # i2 = ix[:, np.newaxis, :]
+            # d[i0, i1, i2] = d[i0, i1, i2[:, :, ::-1]]
+            # self.obj[stale, 0] -= (d[:, ::-1] == r).sum(-1).sum(-1)
+            # # Clear stale everywhere
+            # self.stale[self.stale] = False
 
         def objvalue(self):
             if self.stale.any():
@@ -408,7 +406,7 @@ class Printer3d:
     def generate_values(self,N):
         self.rand_wait = np.random.randint(5)
         rand_size = np.random.randint(1,20,N)
-        rand_dl = np.random.randint(1,10*N,N)
+        rand_dl = rand_size + np.random.randint(1,N,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
         self.rand_pen = np.random.rand(1)
@@ -433,10 +431,10 @@ class Printer3d:
     def randomSolution(self, n=None):
         ## This function works for our problem
         if n is None:
-            return self.Solution(self, np.random.permutation(self.N),jobs=self.jobs, rand_wait = self.rand_wait, rand_pen = self.rand_pen)
+            return self.Solution(self, np.random.permutation(self.N))
         else:
             data = np.empty((n, self.N), int)
             for i in range(n):
                 data[i] = np.random.permutation(self.N)
-            return self.SolutionSample(self, data, jobs=self.jobs,rand_wait = self.rand_wait, rand_pen = self.rand_pen)
+            return self.SolutionSample(self, data)
 

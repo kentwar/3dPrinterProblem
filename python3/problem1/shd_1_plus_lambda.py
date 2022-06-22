@@ -29,9 +29,10 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from nqueens import NQueens
+# from nqueens import NQueens
+from problem1 import Printer3d
 
-p = NQueens(200)
+p = Printer3d(200)
 
 imax = 2000 # max iterations
 out = np.zeros(imax, int)
