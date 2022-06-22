@@ -416,7 +416,7 @@ class Printer3d:
     def generate_values(self, N):
         self.rand_wait = np.random.randint(5)
         rand_size = np.random.randint(1,20,N)
-        rand_dl = rand_size + np.random.randint(1,N,N)
+        rand_dl = rand_size + np.random.randint(1,20*N,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
         self.rand_pen = np.random.rand(1)
