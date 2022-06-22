@@ -1,6 +1,9 @@
 import numpy as np
 import sample
 
+np.random.seed(seed=42)
+
+
 class Printer3d:
 
     class Solution(sample.Element):
