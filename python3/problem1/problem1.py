@@ -350,8 +350,7 @@ class Printer3d:
             # Full evaluation where needed
             values = np.zeros(len(data))
             for solution in range(len(data)):
-                time = 0
-                score = 0
+                import ipdb; ipdb.set_trace()
                 for task in self.data[solution]:
                     size = self.of.jobs[task][0]
                     deadline = self.of.jobs[task][1]
