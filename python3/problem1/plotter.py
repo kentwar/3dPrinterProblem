@@ -35,4 +35,16 @@ def plot_compare(arrs: List[np.ndarray],
 
 # TODO
 # load npz files and store them in a list
+
+arrs = []
+algs = ['simple_ea']
+colors = ['darkgreen']
+linestyles = ['solid']
+title = 'Algorithms comparison'
+ylabel = 'Fitness'
+
+for alg in algs:
+    arrs.append(np.load(f'{alg}_res.npz')['arr_0'])
+
 # call plot_compare with appropriate params
+plot_compare(arrs=arrs, colors=colors, linestyles=linestyles, labels=algs, title=title, ylabel=ylabel, filename='test', add_area=True)

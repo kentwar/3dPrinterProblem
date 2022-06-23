@@ -142,3 +142,5 @@ plt.plot(np.arange(0,Ngen+1), best, 'r')
 plt.xlabel("Number of generations")
 plt.ylabel("f")
 plt.title(p)
+
+np.savez('simple_ea_res.npz', best)
