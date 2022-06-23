@@ -411,9 +411,24 @@ class Printer3d:
             self.data = np.asarray(data)
 
     def generate_values(self, N):
-        self.rand_wait = np.random.randint(5)
-        rand_size = np.random.randint(1,20,N)
-        rand_dl = rand_size + np.random.randint(1,20*N,N)
+        '''
+        adapted to follow the generation of instances from 
+        http://people.brunel.ac.uk/~mastjjb/jeb/orlib/wtinfo.html
+        '''
+        #self.rand_wait = np.random.randint(5)
+        ## To be comparable to paper we set random_wait to 0
+        self.rand_wait = 0
+        rand_size = np.random.randint(1,100,N)
+        #TF is tardiness factor
+        TF = np.random.choice([0.2,0.4,0.6,0.8,1.0])
+        #RDD is relative range of due dates
+        RDD = np.random.choice([0.2,0.4,0.6,0.8,1.0])
+        #P is the sum of sizes
+        P = np.sum(rand_size)
+        lb = P*(1-TF-RDD/2)
+        ub = P*(1-TF+RDD/2)
+        rand_dl = np.random.randint(lb,ub,N)
+        #rand_dl = rand_size + np.random.randint(1,100,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
         self.rand_pen = np.random.randint(10, size=1)
