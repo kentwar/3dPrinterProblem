@@ -117,7 +117,7 @@ for r in range(nruns):
     i = 0
     while i < Ngen:
         # Evaluate individuals
-        cost = pop.objvalue()[:,0]
+        cost = pop.objvalue()[:]
         best[i,r] = min(cost)
         if not i % 10:
             print("run=%2d i=%8d best=%g n_best=%d"%(r,i, best[i,r], sum(cost==best[i,r])))
