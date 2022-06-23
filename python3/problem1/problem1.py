@@ -358,7 +358,7 @@ class Printer3d:
             penalty = time - self.of.deadline_vec[data]
 
             penalty[penalty < 0] = 0
-            self.obj = np.sum(penalty * self.of.rand_pen, axis=1)
+            np.copyto(self.obj, np.sum(penalty * self.of.rand_pen, axis=1))
 
             """
             # FOR LOOP
