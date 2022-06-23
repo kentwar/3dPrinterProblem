@@ -36,7 +36,7 @@ p = Printer3d(200)
 
 imax = 5000
 out = np.zeros(imax, int)
-x = p.randomSolution()
+x = p.randomSolution(1)
 print ("i = %6d, best = %d" % (0, x.objvalue()))
 i = 1
 while i < imax:
