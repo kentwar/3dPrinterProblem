@@ -35,7 +35,7 @@ from problem1 import Printer3d
 p = Printer3d(200)
 
 imax = 2000 # max iterations
-out = np.zeros(imax, int)
+out = np.zeros(imax, float)
 n = 5 # no. of children
 x = p.randomSolution(n+1)
 fx = x.objvalue()
