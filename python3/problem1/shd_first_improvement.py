@@ -29,15 +29,15 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from nqueens import NQueens
+# from nqueens import NQueens
+from problem1 import Printer3d
 
-p = NQueens(100)
+p = Printer3d(200)
 
 imax = 5000
 out = np.zeros(imax, int)
 x = p.randomSolution()
 print ("i = %6d, best = %d" % (0, x.objvalue()))
-out[0] = x.objvalue()
 i = 1
 while i < imax:
     y = x + x.randomMove()

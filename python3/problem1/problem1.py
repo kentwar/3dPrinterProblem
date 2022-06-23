@@ -12,7 +12,7 @@ class Printer3d:
             self.of = of
             self.sample = of.SolutionSample
             self.data = np.asarray(data)
-            self.obj = np.asarray(obj) if obj is not None else np.array([0])
+            self.obj = np.asarray(obj) if obj is not None else np.array([0.0])
             self.stale = np.asarray(stale, bool) if stale is not None else np.array(True)
             self.N = self.of.N
             self.lastmove = np.asarray(lastmove) if lastmove is not None else np.array([self.N, self.N])
@@ -133,7 +133,6 @@ class Printer3d:
             self.toSample().evaluate()
 
         def objvalue(self):
-            print('test')
             if self.stale:
                 self.evaluate()
             return self.obj.copy()
@@ -348,7 +347,6 @@ class Printer3d:
             data = self.data
             wait = self.of.rand_wait
             # Full evaluation where needed
-            values = np.zeros(len(data))
             for idx_solution, solution in enumerate(data):
 
                 # VECTORIZE
@@ -357,7 +355,7 @@ class Printer3d:
                 penalty = time - self.of.deadline_vec[solution]
 
                 score = penalty > 0
-                values[idx_solution] = np.sum(penalty[score] * self.of.rand_pen)
+                self.obj[idx_solution] = np.sum(penalty[score] * self.of.rand_pen)
 
                 """
                 # FOR LOOP
@@ -372,8 +370,6 @@ class Printer3d:
                     time += size + wait
                 values[idx_solution] = score
                 """
-                
-            self.obj=values
 
             # stale = self.stale & (self.lastmove == N).all(-1)
             # q = self.data[stale]
