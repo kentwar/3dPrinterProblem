@@ -130,7 +130,7 @@ class Printer3d:
                         yield m
 
         def evaluate(self):
-            self.toSample().evaluate()
+            self.obj = self.toSample().evaluate()
 
         def objvalue(self):
             if self.stale:
@@ -356,10 +356,9 @@ class Printer3d:
                 # self.obj[idx_solution] = np.sum(penalty[penalty > 0] * self.of.rand_pen)
             time = np.cumsum(self.of.size_vec[data], axis=1) + (np.arange(0, N) * wait).repeat(data.shape[0], axis=0).reshape((N, data.shape[0])).transpose()
             penalty = time - self.of.deadline_vec[data]
-
             penalty[penalty < 0] = 0
             self.obj = np.sum(penalty * self.of.rand_pen, axis=1)
-
+            return(self.obj)
             """
             # FOR LOOP
             time = 0

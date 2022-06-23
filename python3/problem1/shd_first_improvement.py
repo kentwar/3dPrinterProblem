@@ -39,7 +39,7 @@ out = np.zeros(imax, int)
 x = p.randomSolution()
 print ("i = %6d, best = %d" % (0, x.objvalue()))
 i = 1
-while i < imax:
+while i < imax:    
     y = x + x.randomMove()
     if y.objvalue() <= x.objvalue():
         x = y
