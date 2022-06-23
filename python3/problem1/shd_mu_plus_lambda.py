@@ -44,7 +44,7 @@ print ("i = %6d, best = %d" % (0, best))
 out[0] = best
 i = 1
 while i < imax:
-    ix = np.argsort(fx[:, 0])
+    ix = np.argsort(fx[:])
     x[n:] = x[ix[:m]]
     x[:n] = x[n:] + x[n:].randomMove(n // m)
     fx = x.objvalue()
