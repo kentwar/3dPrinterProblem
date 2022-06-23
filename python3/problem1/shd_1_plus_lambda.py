@@ -39,9 +39,9 @@ from problem1 import Printer3d
 
 p = Printer3d( 200 , instance = None)
 
-imax = 10000 # max iterations
+imax = constants.max_iterations  # max iterations
 out = np.zeros(imax, float)
-n = 5 # no. of children
+n = constants.number_of_children  # no. of children
 x = p.randomSolution(n+1)
 fx = x.objvalue()
 best = min(fx)
@@ -60,4 +60,4 @@ while i < imax:
     i += 1
 
 # Save results in npz format to results folder
-np.savez(os.path.join(constants.results_folder, 'shd_1_plus_lambda_res.npz'), best)
+np.savez(os.path.join(constants.results_folder, 'shd_1_plus_lambda_res.npz'), out)

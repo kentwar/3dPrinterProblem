@@ -36,10 +36,10 @@ from problem1 import Printer3d
 
 p = Printer3d(200)
 
-imax = 2000 # max iterations
+imax = constants.max_iterations  # max iterations
 out = np.zeros(imax, int)
-m = 10 # no. of parents
-n = 10 # no. of children
+m = 10  # no. of parents
+n = constants.number_of_children  # no. of children
 x = p.randomSolution(n+m)
 fx = x.objvalue()
 best = min(fx)
@@ -58,4 +58,4 @@ while i < imax:
     i += 1
 
 # Save results in npz format to results folder
-np.savez(os.path.join(constants.results_folder, 'shd_mu_plus_lambda_res.npz'), best)
+np.savez(os.path.join(constants.results_folder, 'shd_mu_plus_lambda_res.npz'), out)

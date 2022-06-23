@@ -40,9 +40,9 @@ from problem1 import Printer3d
 p = Printer3d(200)
 
 # EA parameters
-Nind = 200      # Population size
-Ngen = 1000     # Number of generations
-nruns = 5       # Number of runs
+Nind = constants.number_of_children      # Population size
+Ngen = constants.max_iterations     # Number of generations
+nruns = 1       # Number of runs
 SP = 2          # Selective pressure, a number between 1 and 2
 
 # Suggestion: try out different mutation rates and see what happens!
