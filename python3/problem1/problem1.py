@@ -347,29 +347,32 @@ class Printer3d:
             data = self.data
             wait = self.of.rand_wait
             # Full evaluation where needed
-            for idx_solution, solution in enumerate(data):
+            # for idx_solution, solution in enumerate(data):
 
                 # VECTORIZE
-                time = np.cumsum(self.of.size_vec[solution] + wait)
-                time -= wait
-                penalty = time - self.of.deadline_vec[solution]
+                # time = np.cumsum(self.of.size_vec[solution]) + np.arange(0, N) * wait
+                # penalty = time - self.of.deadline_vec[solution]
 
-                score = penalty > 0
-                self.obj[idx_solution] = np.sum(penalty[score] * self.of.rand_pen)
+                # self.obj[idx_solution] = np.sum(penalty[penalty > 0] * self.of.rand_pen)
+            time = np.cumsum(self.of.size_vec[data], axis=1) + (np.arange(0, N) * wait).repeat(data.shape[0], axis=0).reshape((N, data.shape[0])).transpose()
+            penalty = time - self.of.deadline_vec[data]
 
-                """
-                # FOR LOOP
-                time = 0
-                score = 0
-                for task in self.data[idx_solution]:
-                    size = self.of.jobs[task][0]
-                    deadline = self.of.jobs[task][1]
-                    penalty = (time+size) - deadline
-                    if penalty > 0:
-                        score += self.of.rand_pen*penalty
-                    time += size + wait
-                values[idx_solution] = score
-                """
+            penalty[penalty < 0] = 0
+            self.obj = np.sum(penalty * self.of.rand_pen, axis=1)
+
+            """
+            # FOR LOOP
+            time = 0
+            score = 0
+            for task in self.data[idx_solution]:
+                size = self.of.jobs[task][0]
+                deadline = self.of.jobs[task][1]
+                penalty = (time+size) - deadline
+                if penalty > 0:
+                    score += self.of.rand_pen*penalty
+                time += size + wait
+            values[idx_solution] = score
+            """
 
             # stale = self.stale & (self.lastmove == N).all(-1)
             # q = self.data[stale]
