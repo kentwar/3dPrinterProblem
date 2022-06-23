@@ -410,6 +410,13 @@ class Printer3d:
             self.element = of.Move
             self.data = np.asarray(data)
 
+    def vectorize_instance(self, N, sizes, deadlines):
+        self.size_vec = np.zeros(N, np.int64)
+        self.deadline_vec = np.zeros(N, np.int64)
+        for task in range(N):
+            self.size_vec[task] = sizes[task]
+            self.deadline_vec[task] = deadlines[task]
+
     def generate_values(self, N):
         '''
         adapted to follow the generation of instances from 
@@ -432,15 +439,26 @@ class Printer3d:
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
         self.rand_pen = np.random.randint(10, size=1)
+        sizes = [job[0] for job in self.jobs.values()]
+        deadlines = [job[1] for job in self.jobs.values()]   
+        self.vectorize_instance(N, sizes, deadlines)
 
         # generate vectorize data
-        self.size_vec = np.zeros(N, np.int64)
-        self.deadline_vec = np.zeros(N, np.int64)
-        for key, value in self.jobs.items():
-            self.size_vec[key] = value[0]
-            self.deadline_vec[key] = value[1]
 
-    def __init__(self, N):
+
+
+
+    def __init__(self, N , instance = None):
+        '''
+        INPUT:
+        Name         Type               Description 
+        N           : INT             : Number of tasks
+        instance    : LIST of objects : [penalty, wait, sizes , deadlines]
+         - penalty  : FLOAT           : penalty value
+         - wait     : FLOAT           : wait 
+         - sizes    : List/Array      : size values
+         - deadlines: List/Array      : deadline values
+        ''' 
         if N < 4:
             raise ValueError('there must be at least 4 tasks')
         self.N = int(N)
@@ -448,7 +466,13 @@ class Printer3d:
         ## TODO - What is this for??
         r = np.arange(N)
         self.r = r
-        self.generate_values(self.N)
+        if instance is None:
+            self.generate_values(self.N)
+        else:
+            self.rand_pen, self.rand_wait, sizes, deadlines = instance
+            self.vectorize_instance(N , sizes, deadlines)
+            
+
 
 
         

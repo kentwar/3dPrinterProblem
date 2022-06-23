@@ -32,7 +32,8 @@ import numpy as np
 # from nqueens import NQueens
 from problem1 import Printer3d
 
-p = Printer3d(200)
+instance = [0.1, 0, [10,1,20,3], [100,2,3,4]]
+p = Printer3d(4, instance)
 
 imax = 2000 # max iterations
 out = np.zeros(imax, float)
