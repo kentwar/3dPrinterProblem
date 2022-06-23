@@ -46,3 +46,5 @@ while i < imax:
         print ("i = %6d, best = %d" % (i, x.objvalue()))
     out[i] = x.objvalue()
     i += 1
+
+# np.savez('shd_mu_plus_lambda_res.npz', best)

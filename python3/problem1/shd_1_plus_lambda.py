@@ -29,6 +29,9 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
+import os
+
+import constants
 from problem1 import Printer3d
 
 #instance = [0.1, 0, [10,1,20,3], [100,2,3,1],[1,1,1,1]]
@@ -55,3 +58,6 @@ while i < imax:
         print ("i = %6d, best = %d" % (i, best))
     out[i] = best
     i += 1
+
+# Save results in npz format to results folder
+np.savez(os.path.join(constants.results_folder, 'shd_1_plus_lambda_res.npz'), best)

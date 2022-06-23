@@ -1,7 +1,13 @@
+import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib
 from typing import List
 import numpy as np
+import os
+
+import constants
+
+sns.set_theme()
 
 def plot_compare(arrs: List[np.ndarray],
                  colors: List[str],
@@ -37,14 +43,14 @@ def plot_compare(arrs: List[np.ndarray],
 # load npz files and store them in a list
 
 arrs = []
-algs = ['simple_ea']
-colors = ['darkgreen']
+algs = ['simple_ea', 'shd_1_plus_lambda', 'shd_mu_plus_lambda']
+colors = ['darkgreen', 'red', 'blue']
 linestyles = ['solid']
 title = 'Algorithms comparison'
 ylabel = 'Fitness'
 
 for alg in algs:
-    arrs.append(np.load(f'{alg}_res.npz')['arr_0'])
+    arrs.append(np.load(os.path.join(constants.results_folder, f'{alg}_res.npz'))['arr_0'])
 
 # call plot_compare with appropriate params
-plot_compare(arrs=arrs, colors=colors, linestyles=linestyles, labels=algs, title=title, ylabel=ylabel, filename='test', add_area=True)
+plot_compare(arrs=arrs, colors=colors, linestyles=linestyles, labels=algs, title=title, ylabel=ylabel, filename=os.path.join(constants.results_folder, 'comparison_of_methods'), add_area=True)

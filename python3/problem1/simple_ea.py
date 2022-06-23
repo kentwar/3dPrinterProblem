@@ -29,6 +29,9 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
+import os
+
+import constants
 import matplotlib.pyplot as plt
 
 # Instantiate the problem to solve here
@@ -143,4 +146,5 @@ plt.xlabel("Number of generations")
 plt.ylabel("f")
 plt.title(p)
 
-np.savez('simple_ea_res.npz', best)
+# Save results in npz format to results folder
+np.savez(os.path.join(constants.results_folder, 'simple_ea_res.npz'), best)
