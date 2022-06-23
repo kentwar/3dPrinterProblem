@@ -353,7 +353,7 @@ class Printer3d:
                 time = np.cumsum(self.of.size_vec[data], axis=1) + (np.arange(0, N) * wait).repeat(data.shape[0], axis=0).reshape((N, data.shape[0])).transpose()
                 penalty = time - self.of.deadline_vec[data]
                 penalty[penalty < 0] = 0
-                self.obj = np.sum(penalty * self.of.rand_pen, axis=1)
+                self.obj = np.sum(self.of.weights_vec * penalty, axis=1)
 
             else:
                 # FOR LOOP
@@ -365,7 +365,7 @@ class Printer3d:
                         deadline = self.of.jobs[task][1]
                         penalty = (time+size) - deadline
                         if penalty > 0:
-                            score += self.of.rand_pen*penalty
+                            score += self.of.weights_vec[task]*penalty
                         time += size + wait
                     self.obj[idx_solution] = score
 
@@ -408,12 +408,14 @@ class Printer3d:
             self.element = of.Move
             self.data = np.asarray(data)
 
-    def vectorize_instance(self, N, sizes, deadlines):
+    def vectorize_instance(self, N, sizes, deadlines, weights):
         self.size_vec = np.zeros(N, np.int64)
         self.deadline_vec = np.zeros(N, np.int64)
+        self.weights_vec = np.zeros(N, np.int64)
         for task in range(N):
             self.size_vec[task] = sizes[task]
             self.deadline_vec[task] = deadlines[task]
+            self.weights_vec[task] = weights[task]
 
     def generate_values(self, N):
         '''
@@ -423,6 +425,7 @@ class Printer3d:
         #self.rand_wait = np.random.randint(5)
         ## To be comparable to paper we set random_wait to 0
         self.rand_wait = 0
+        weights = np.random.randint(1,10,N)
         rand_size = np.random.randint(1,100,N)
         #TF is tardiness factor
         TF = np.random.choice([0.2,0.4,0.6,0.8,1.0])
@@ -436,10 +439,10 @@ class Printer3d:
         #rand_dl = rand_size + np.random.randint(1,100,N)
         joblist = [[rand_size[c],rand_dl[c]] for c in range(N)]
         self.jobs = {i:job for i,job in enumerate(joblist)}
-        self.rand_pen = np.random.randint(10, size=1)
+        #self.rand_pen = np.random.randint(10, size=1)
         sizes = [job[0] for job in self.jobs.values()]
         deadlines = [job[1] for job in self.jobs.values()]   
-        self.vectorize_instance(N, sizes, deadlines)
+        self.vectorize_instance(N, sizes, deadlines, weights)
 
         # generate vectorize data
 
@@ -451,11 +454,12 @@ class Printer3d:
         INPUT:
         Name         Type               Description 
         N           : INT             : Number of tasks
-        instance    : LIST of objects : [penalty, wait, sizes , deadlines]
+        instance    : LIST of objects : [penalty, wait, sizes , deadlines, weights]
          - penalty  : FLOAT           : penalty value
          - wait     : FLOAT           : wait 
          - sizes    : List/Array      : size values
          - deadlines: List/Array      : deadline values
+         - weights  : List/Array      : weight values
         ''' 
         if N < 4:
             raise ValueError('there must be at least 4 tasks')
@@ -467,8 +471,8 @@ class Printer3d:
         if instance is None:
             self.generate_values(self.N)
         else:
-            self.rand_pen, self.rand_wait, sizes, deadlines = instance
-            self.vectorize_instance(N , sizes, deadlines)
+            self.rand_pen, self.rand_wait, sizes, deadlines, weights = instance
+            self.vectorize_instance(N , sizes, deadlines, weights)
             
 
 
