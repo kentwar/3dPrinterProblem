@@ -26,7 +26,10 @@ def plot_compare(arrs: List[np.ndarray],
     for arr, color, label, linestyle in zip(arrs, colors, labels, linestyles):
         # values_mean = np.nanmean(arr, axis=0)
         values_mean = np.nanmean(arr, axis=1)
-        plt.plot(np.log(range(len(values_mean))), values_mean, label=label, c=color, lw=2, linestyle=linestyle)
+        # plt.plot(np.log(range(len(values_mean))), values_mean, label=label, c=color, lw=2, linestyle=linestyle)
+        plt.plot(range(len(values_mean)), values_mean, label=label, c=color, lw=2, linestyle=linestyle)
+        # plt.yscale('log')
+        plt.xscale('log')
         if add_area:
             values_std = np.std(arr, axis=0)
             
@@ -35,7 +38,7 @@ def plot_compare(arrs: List[np.ndarray],
     plt.legend()
     plt.title(title)
     plt.ylabel(ylabel)
-    plt.xlabel('log(Time)')
+    plt.xlabel('Time')
     plt.autoscale(enable=True, axis='x', tight=True)
     plt.savefig(f'./{filename}.png', transparent=True, bbox_inches='tight')
     plt.show()
