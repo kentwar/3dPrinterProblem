@@ -12,4 +12,4 @@ See our award* winning presentation here https://docs.google.com/presentation/d/
 
 
 
-* The only award was smiles and appreciation, arguably the best award.
+*the only award was smiles and appreciation, arguably the best award.
