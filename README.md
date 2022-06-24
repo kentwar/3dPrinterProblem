@@ -1,4 +1,4 @@
-# s3-2022
+# 3d Printer scheduling problem.
 SIGEVO Summer School 2022 Modelling Projects
 
 Code written during the GECCO summer School 2022.
